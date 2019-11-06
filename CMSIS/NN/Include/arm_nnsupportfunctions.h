@@ -349,8 +349,14 @@ void arm_nn_mult_q7(
 
 // Macros for shortening quantization functions' names and avoid long lines
 #define MUL_SAT(a, b)  arm_nn_sat_doubling_high_mult((a), (b))
+#define MUL_SAT_MVE(a, b) arm_mve_sat_doubling_high_mult_32x4((a), (b))
 #define MUL_POW2(a, b) arm_nn_mult_by_power_of_two((a), (b))
+
+
 #define DIV_POW2(a, b) arm_nn_divide_by_power_of_two((a), (b))
+#define DIV_POW2_MVE(a, b) arm_mve_divide_by_power_of_two((a), (b))
+
+
 #define EXP_ON_NEG(x)  arm_nn_exp_on_negative_values((x))
 #define ONE_OVER1(x)   arm_nn_one_over_one_plus_x_for_x_in_0_1((x))
 
@@ -379,7 +385,7 @@ __STATIC_FORCEINLINE q31_t arm_nn_sat_doubling_high_mult(const q31_t m1, const q
     // as well.
     result = mult / (1UL << 31);
 
-    if ((m1 == m2) && (m1 == Q31_MIN))
+    if ((m1 == m2) && (m1 == (int32_t)Q31_MIN))
     {
         result = Q31_MAX;
     }
